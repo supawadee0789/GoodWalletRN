@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1022553104858-i78jfllrbt92rn7r5qc67m54kl3s4gkj.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1022553104858-i78jfllrbt92rn7r5qc67m54kl3s4gkj</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBaXR9zOhbtigacfd6l-6vlEF43V_T7280</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1022553104858</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.goodwallet.app</string>
+	<key>PROJECT_ID</key>
+	<string>goodwallet-f4cb8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>goodwallet-f4cb8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1022553104858:ios:b7ecee28afab1c164220e3</string>
+</dict>
+</plist>
