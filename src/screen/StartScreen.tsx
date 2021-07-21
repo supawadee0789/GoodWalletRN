@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Animated, KeyboardAvoidingView, ScrollView} from 'react-native';
+import {Animated} from 'react-native';
 import styled from 'styled-components/native';
 import ScreenBg from '../component/ScreenBg';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -7,13 +7,19 @@ import LogoIcon from '../asset/LogoIcon.svg';
 import {windowWidth} from '../constants/platform';
 import MyModal from '../component/Modal';
 import SignIn from '../component/SignIn';
+import {useSelector} from 'react-redux';
+import {getUser} from '../store/walletSlice';
+
 export const ModalContext = React.createContext();
 
-const StartScreen = () => {
+const StartScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isSignIn, setSignIn] = useState(true);
   const iconAnimatedValue = useRef(new Animated.Value(0)).current;
   const modal = [modalVisible, setModalVisible];
+
+  const user = useSelector(getUser);
+
   useEffect(() => {
     Animated.timing(iconAnimatedValue, {
       toValue: modalVisible ? 1 : 0,
@@ -66,7 +72,14 @@ const StartScreen = () => {
             <LogoIcon width={windowWidth * 0.4} />
           </Animated.View>
 
-          <StartBtn onPress={() => setModalVisible(true)}>
+          <StartBtn
+            onPress={() => {
+              if (user === '') {
+                setModalVisible(true);
+              } else {
+                navigation.navigate('home');
+              }
+            }}>
             <StartBtnText>START</StartBtnText>
           </StartBtn>
         </ContentContainer>

@@ -5,12 +5,19 @@ import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
 import {useNavigation} from '@react-navigation/native';
 import {ModalContext} from '../screen/StartScreen';
+
+import {useDispatch, useSelector} from 'react-redux';
+import {getTotal, saveUser} from '../store/walletSlice';
+
 interface Props {
   isSignIn: boolean;
 }
 interface Users {
   email: string;
   uid: string;
+}
+interface Wallet extends Users {
+  total: number;
 }
 const SignIn: React.FC<Props> = ({isSignIn}) => {
   const [initializing, setInitializing] = useState(true);
@@ -19,6 +26,7 @@ const SignIn: React.FC<Props> = ({isSignIn}) => {
   const [password, setPassword] = useState('');
   const [modalVisible, setModalVisible] = React.useContext(ModalContext);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   function onAuthStateChanged(user) {
     setUser(user);
@@ -27,20 +35,39 @@ const SignIn: React.FC<Props> = ({isSignIn}) => {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-
     return subscriber; // unsubscribe on unmount
   }, [user]);
+
+  const setUpData = (userID: string) => {
+    const userData: Users = {email: email, uid: userID};
+    const walletData: Wallet = {
+      email: email,
+      uid: userID,
+      total: 0,
+    };
+    database().ref(`/users/${userID}`).set(userData);
+    database().ref(`/wallets/${userID}`).set(walletData);
+  };
+
+  const getData = (userID: string) => {
+    database()
+      .ref(`/wallets/${userID}/total`)
+      .once('value')
+      .then(res => {
+        const total = res.val();
+        dispatch(getTotal(total));
+      });
+  };
 
   const signIn = () => {
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(response => {
         setUser(response.user);
-        const userData: Users = {email: email, uid: response.user.uid};
-        const userID = response.user.uid;
-        const reference = database().ref(`/users/${userID}`);
-        reference.set(userData);
+        dispatch(saveUser(email));
         setModalVisible(prev => !prev);
+        getData(response.user.uid);
+        dispatch(saveUser(email));
         navigation.navigate('home');
 
         console.warn('User account created & signed in!');
@@ -69,7 +96,13 @@ const SignIn: React.FC<Props> = ({isSignIn}) => {
   const signUp = () => {
     auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(response => {
+        setUser(response.user);
+        dispatch(saveUser(email));
+        const userID = response.user.uid;
+        setUpData(userID);
+        setModalVisible(prev => !prev);
+        navigation.navigate('home');
         console.log('User account created & signed in!');
       })
       .catch(error => {
